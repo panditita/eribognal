@@ -1,22 +1,15 @@
 import React, { Component } from 'react';
 
-
-class PlaceCard extends React.Component {
-    render(props) {
-        return (
-            <div>
-                <ul>
-                    {props.data.data.children.map(places => (
-                        <ul>
-                            <li> Title: {props.places.title} </li>
-                            <li> Description: {props.places.description} </li>
-                            <li> Category:   {props.places.category} </li>
-                        </ul>
-                    ))}
-                </ul>
-            </div>
-        );
-    }
+const PlaceCard = props => {
+    return (
+        <div>
+            <ul>
+                <li> Title: {props.title} </li>
+                <li> Description: {props.description} </li>
+                <li> Category:   {props.category} </li>
+            </ul>
+        </div>
+    )
 }
 
 export default PlaceCard;

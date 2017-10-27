@@ -6,20 +6,32 @@ class FetchPlacesList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            places: []
+            places: "",
+            data: []
         };
     }
 
     componentDidMount() {
-        axios.get(`http://www.reddit.com/r/reactjs.json`)
-            .then(res => {
-                const places = res.data.data.children.map(obj => obj.data);
-                this.setState({ places });
-            });
-    }
+        axios.get('http://eribognal-server.herokuapp.com/api/questions')
+            .then(({data}) => {
+                this.setState({
+                    places: data.places,
+                    data: data.data.children
+                });
+            })
+            .catch((err) => {})
+        }
 
     render() {
-        return React.createElement(PlaceCard, {places: this.props.places});
+        return (
+            <div>
+                {this.state.data.map( place => {
+                    return (
+                        <PlaceCard />
+                    )
+                })}
+            </div>
+        )
     }
 }
 
