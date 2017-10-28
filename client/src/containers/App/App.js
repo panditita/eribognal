@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import About from '../../components/About/About';
 import Home from '../../components/Home/Home';
-import FetchPlacesList from '../PlaceList';
+import PlacesList from '../PlaceList';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
@@ -17,7 +17,7 @@ class App extends Component {
           </ul>
           <Route exact path="/" component={Home} />
           <Route path="/about" component={About} />
-          <Route path="/place" component={FetchPlacesList} />          
+          <Route path="/place" component={PlacesList} />          
         </div>
       </Router>
     );

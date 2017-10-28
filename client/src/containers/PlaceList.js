@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import PlaceCard from '../components/Place/PlaceCard';
 
-class FetchPlacesList extends React.Component {
+class PlacesList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -36,4 +36,4 @@ class FetchPlacesList extends React.Component {
     }
 }
 
-export default FetchPlacesList; 
+export default PlacesList; 
