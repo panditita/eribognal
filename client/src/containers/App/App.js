@@ -5,6 +5,22 @@ import About from '../../components/About/About';
 import Home from '../../components/Home/Home';
 import Questions from '../Questionnaire/Questionnaire';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { withStyles } from 'material-ui/styles';
+import Paper from 'material-ui/Paper';
+import Grid from 'material-ui/Grid';
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    marginTop: 30,
+  },
+  paper: {
+    padding: 16,
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+});
+
 
 class App extends Component {
   render() {
