@@ -7,37 +7,35 @@ import PlacesList from '../PlaceList';
 import Questions from '../Questionnaire/Questionnaire';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
 import Grid from 'material-ui/Grid';
-
+import MenuIcon from 'material-ui-icons/Menu';
 const styles = theme => ({
   root: {
     flexGrow: 1,
     marginTop: 30,
   },
-  paper: {
-    padding: 16,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
 });
-
 
 class App extends Component {
   render() {
+    const { classes } = this.props;
     return (
       <Router>
-        <div>
-          <Menu />
-          <Route exact path="/" component={Home} />
-          <Route path="/about" component={About} />
-          <Route path="/questionnaire" component={Questions} />
-          <Route path="/places" component={PlacesList} />   
+        <div className={classes.root}>
+          <Grid container spacing={24}>
+            <Grid item xs={12}>
+                <Menu />
+                <Route exact path="/" component={Home} />
+                <Route path="/about" component={About} />
+                <Route path="/questionnaire" component={Questions} />
+                <Route path="/places" component={PlacesList} /> 
+              </Grid>
+          </Grid>
         </div>
       </Router>
     );
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
 
