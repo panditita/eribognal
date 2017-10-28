@@ -12,25 +12,26 @@ class PlacesList extends React.Component {
 
     componentDidMount() {
         axios.get('http://eribognal-server.herokuapp.com/api/questions')
-            .then(({ res }) => {
+            .then(({ data }) => {
                 this.setState({
-                    places: res.data.places
+                    places: data
                 });
             })
-            .catch((err) => { })
-
+            .catch((err) => { })    
     }
 
     render() {
-        const place = this.state.places.map((value, index) => {
-            return (
-                <li key={index}>{value.title}</li>
-            )
-        });
         return (
             <div>
-                <PlaceCard
-                    place={place.title} />
+                {
+                    this.state.places.map((place) => {
+                        return (
+                            <PlaceCard place = { place } />
+                        )
+                    })
+                }
+
+             
             </div>
         )
     }
