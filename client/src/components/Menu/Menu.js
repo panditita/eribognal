@@ -9,25 +9,12 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
-
-const styles = theme => ({
-    root: {
-        marginTop: theme.spacing.unit * 3,
-        width: '100%',
-    },
-    flex: {
-        flex: 1,
-    },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
-    },
-});
+import Themes from '../../Themes';
 
 function Menu(props) {
     const { classes } = props;
     return (
-        <div className={classes.roo}>
+        <div className={classes.root}>
             <Grid container spacing={24}>
                 <Grid item xs={12}>
                     <AppBar position="static">
@@ -50,4 +37,4 @@ function Menu(props) {
     )
 }
 
-export default withStyles(styles)(Menu);
+export default withStyles(Themes)(Menu);

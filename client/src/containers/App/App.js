@@ -8,13 +8,8 @@ import Questions from '../Questionnaire/Questionnaire';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
-import MenuIcon from 'material-ui-icons/Menu';
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    marginTop: 30,
-  },
-});
+import Themes from '../../Themes';
+
 
 class App extends Component {
   render() {
@@ -37,5 +32,5 @@ class App extends Component {
   }
 }
 
-export default withStyles(styles)(App);
+export default withStyles(Themes)(App);
 
