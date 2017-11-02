@@ -1,6 +1,8 @@
 import React from 'react';
 import PlaceCard from '../../components/Place/PlaceCard';
 import apiClient from '../../helpers/apiClient';
+import AddPlaceButton from '../../components/Place/AddPlaceButton'
+
 
 class PlacesList extends React.Component {
     constructor(props) {
@@ -17,7 +19,7 @@ class PlacesList extends React.Component {
                     places: data
                 });
             })
-            .catch((err) => { })    
+            .catch((err) => { })
     }
 
     render() {
@@ -26,12 +28,11 @@ class PlacesList extends React.Component {
                 {
                     this.state.places.map((place) => {
                         return (
-                            <PlaceCard place = { place } />
+                            <PlaceCard place={place} />
                         )
                     })
                 }
-
-             
+                <AddPlaceButton />
             </div>
         )
     }

@@ -4,6 +4,7 @@ import Menu from '../../components/Menu/Menu';
 import About from '../../components/About/About';
 import Home from '../../components/Home/Home';
 import PlacesList from '../PlaceList/PlaceList';
+import AddPlaceForm from '../PlaceList/AddPlaceForm';
 import Questions from '../Questionnaire/Questionnaire';
 import { withStyles } from 'material-ui/styles';
 import Grid from 'material-ui/Grid';
@@ -23,6 +24,7 @@ class App extends Component {
                 <Route path="/about" component={About} />
                 <Route path="/questionnaire" component={Questions} />
                 <Route path="/places" component={PlacesList} /> 
+                <Route path="/new-place" component={AddPlaceForm} /> 
               </Grid>
           </Grid>
         </div>
