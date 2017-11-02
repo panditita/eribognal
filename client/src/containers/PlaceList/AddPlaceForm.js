@@ -1,8 +1,21 @@
 import React from 'react';
 import axios from 'axios';
-import { Card } from 'material-ui/Card';
-import { RaisedButton } from 'material-ui/Button';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
+import Grid from 'material-ui/Grid';
+import { withStyles } from 'material-ui/styles';
+
+const styles = {
+  root: {
+    flexGrow: 1,
+    marginTop: 30,
+  },
+  paper: {
+    padding: 16,
+    textAlign: 'center',
+  },
+};
 
 class AddPlaceForm extends React.Component {
   constructor(props) {
@@ -48,30 +61,34 @@ class AddPlaceForm extends React.Component {
   }
   render() {
     return (
-      <div>
-        <h2 className="card-heading">Suggest a New Place</h2>
-        <Card>
-          <form>
-            <TextField
-              floatingLabelText="name"
-              value={this.state.name}
-              onChange={this._handleChange}
-              type="text"
-              name="name" />
-            <TextField
-              floatingLabelText="description"
-              value={this.state.description}
-              onChange={this._handleChange}
-              type="text"
-              name="description" />
-            <RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
-              Save
+        <Grid item xs={6}>
+          <Paper style={styles} zDepth={3} >
+            <h2 className="card-heading">Suggest a New Place</h2>
+            <form>
+              <TextField
+                floatingLabelText='Name of the Place'
+                value={this.state.name}
+                onChange={this._handleChange}
+                type="text"
+                name="name" 
+                hintText='Name of the Place'/>
+              <br />
+              <TextField
+                floatingLabelText="Description of the Place"
+                value={this.state.description}
+                onChange={this._handleChange}
+                type="text"
+                name="description" 
+                hintText="Description of the Place"/>
+              <br />
+              <RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
+                Save
         </RaisedButton>
-          </form>
-        </Card>
-      </div>
+            </form>
+          </Paper>
+        </Grid>
     )
   }
 }
 
-export default AddPlaceForm;
+export default withStyles(styles)(AddPlaceForm);
