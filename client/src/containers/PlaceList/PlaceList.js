@@ -19,7 +19,6 @@ class PlacesList extends React.Component {
                     places: data
                 });
             })
-            .catch((err) => { })
     }
 
     render() {

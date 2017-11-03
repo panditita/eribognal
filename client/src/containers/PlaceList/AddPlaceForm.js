@@ -5,6 +5,7 @@ import RaisedButton from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
+import apiClient from '../../helpers/apiClient';
 
 const styles = {
   root: {
@@ -12,7 +13,6 @@ const styles = {
     marginTop: 30,
   },
   paper: {
-    padding: 16,
     textAlign: 'center',
   },
 };
@@ -26,8 +26,9 @@ class AddPlaceForm extends React.Component {
       description: ''
     }
   }
+
   _getPlaces = () => {
-    axios.get('http://localhost:3000/api/places')
+    apiClient.getPlaces()
       .then((res => {
         const places = res.data;
         this.setState({
@@ -35,12 +36,14 @@ class AddPlaceForm extends React.Component {
         });
       }))
   }
+
   componentDidMount() {
     this._getPlaces();
   }
+
   _handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:3000/api/places', {
+    apiClient.suggestPlaces({
       name: this.state.name,
       description: this.state.description
     })
@@ -61,32 +64,43 @@ class AddPlaceForm extends React.Component {
   }
   render() {
     return (
-        <Grid item xs={6}>
-          <Paper style={styles} zDepth={3} >
-            <h2 className="card-heading">Suggest a New Place</h2>
-            <form>
-              <TextField
-                floatingLabelText='Name of the Place'
-                value={this.state.name}
-                onChange={this._handleChange}
-                type="text"
-                name="name" 
-                hintText='Name of the Place'/>
-              <br />
-              <TextField
-                floatingLabelText="Description of the Place"
-                value={this.state.description}
-                onChange={this._handleChange}
-                type="text"
-                name="description" 
-                hintText="Description of the Place"/>
-              <br />
-              <RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
-                Save
+      <Grid container spacing={24}>
+        <Grid item xs={12}>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}>
+            <Paper style={styles} zDepth={3} >
+              <h2 className="card-heading">Suggest a New Place</h2>
+              <form  style={{display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'}}>
+                <TextField
+                  placeholder="Name of the Place"
+                  floatingLabelText='Name of the Place'
+                  value={this.state.name}
+                  onChange={this._handleChange}
+                  type="text"
+                  name="name"
+                  hintText='Name of the Place' />
+                <TextField
+                  placeholder="Description"
+                  floatingLabelText="Description"
+                  value={this.state.description}
+                  onChange={this._handleChange}
+                  type="text"
+                  name="description"
+                  hintText="Description" 
+                  multiLine={true}/>
+                <RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
+                  Save
         </RaisedButton>
-            </form>
-          </Paper>
+              </form>
+            </Paper>
+          </div>
         </Grid>
+      </Grid>
     )
   }
 }

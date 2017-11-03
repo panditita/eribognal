@@ -1,8 +1,8 @@
 import React from 'react';
 import IconButton from 'material-ui/IconButton';
-import Button from 'material-ui/Button';
+import RaisedButton from 'material-ui/Button';
 import { NavLink } from "react-router-dom";
-import { Add } from 'material-ui-icons/';
+import  Add  from 'material-ui-icons/Add';
 
 const iconStyles = {
     marginLeft: 50,
@@ -11,12 +11,12 @@ const iconStyles = {
 
 const AddPlaceButton = () => (
     <div>
-        <Button style={iconStyles}>
+        <RaisedButton style={iconStyles}>
             <IconButton tooltip="SVG Icon" >
                 <Add />
             </IconButton>
             <NavLink to="/new-place">Suggest New Place</NavLink>
-        </Button>
+        </RaisedButton>
     </div>
 
 );
