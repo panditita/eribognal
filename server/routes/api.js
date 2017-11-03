@@ -23,5 +23,10 @@ router.get('/places', function (req, res, next) {
     })
 })
 
+router.post('/api/places', function(req, res, next) {
+    res.render('new-place', { title: 'Suggest New Place' });
+  });
+  
+
 
 module.exports = router;
