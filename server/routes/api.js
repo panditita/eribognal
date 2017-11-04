@@ -24,8 +24,8 @@ router.get('/places', function (req, res, next) {
 })
 
 router.post('/places', function(req, res, next) {
-    const suggestedPlace = new Place(req.body);
-    suggestedPlace.save()
+    const addNewPlace = new Place(req.body);
+    addNewPlace.save()
     .then(item => {
         res.send("Place saved to database");
     })
