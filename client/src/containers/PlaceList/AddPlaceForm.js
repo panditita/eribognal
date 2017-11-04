@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
@@ -25,20 +24,6 @@ class AddPlaceForm extends React.Component {
       name: '',
       description: ''
     }
-  }
-
-  _getPlaces = () => {
-    apiClient.getPlaces()
-      .then((res => {
-        const places = res.data;
-        this.setState({
-          places: places
-        });
-      }))
-  }
-
-  componentDidMount() {
-    this._getPlaces();
   }
 
   _handleSubmit = (event) => {

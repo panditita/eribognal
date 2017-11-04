@@ -23,8 +23,14 @@ router.get('/places', function (req, res, next) {
     })
 })
 
-router.post('/api/places', function(req, res, next) {
-    res.render('new-place', { title: 'Suggest New Place' });
-  });
-
+router.post('/places', function(req, res, next) {
+    const suggestedPlace = new Place(req.body);
+    suggestedPlace.save()
+    .then(item => {
+        res.send("Place saved to database");
+    })
+    .catch(err => {
+        res.status(400).send("Unable to save to database");
+    });
+});
 module.exports = router;
