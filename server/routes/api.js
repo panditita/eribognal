@@ -24,22 +24,8 @@ router.get('/places', function (req, res, next) {
 })
 
 router.post('/places', function(req, res, next) {
-
-    try {
-
-        placesDB.addNewPlace(req.body)
-        // .then(item => {
-        //     res.send("Place saved to database");
-        // })
-        // .catch(err => {
-        //     res.status(400).send("Unable to save to database");
-        // });
-     
-    } catch (e)
-    {
-        console.error(e);
-    }
-   
+    const callback = () => {res.send(200)}
+    placesDB.addNewPlace(req.body, callback)
 });
 
 module.exports = router;

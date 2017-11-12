@@ -27,32 +27,26 @@ class AddPlaceForm extends React.Component {
       description: ''
     }
   }
+   
+  redirect = () => {
+    //window.location.href = "/";
+    this.props.history.push("/")
+}
 
-  _getPlaces = () => {
-    apiClient.getPlaces()
-    .then((res => {
-        const places = res.data;
-        this.setState({
-            places: places
-        });
-    }))
-}
-componentDidMount() {
-    this._getPlaces();
-}
   _handleSubmit = (event) => {
     event.preventDefault();
     apiClient.suggestPlaces({
       name: this.state.name,
       description: this.state.description
     })
-    .then(() => {
+      .then(() => {
         this.setState({
           name: "",
           description: ""
         })
-        .then(this._getPlaces)        
-      }) 
+        this.redirect()
+      })
+      
   }
   _handleChange = (event, field) => {
     const value = event.target.value;
