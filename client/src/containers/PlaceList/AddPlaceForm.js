@@ -6,6 +6,8 @@ import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import apiClient from '../../helpers/apiClient';
 
+
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -26,25 +28,36 @@ class AddPlaceForm extends React.Component {
     }
   }
 
+  _getPlaces = () => {
+    apiClient.getPlaces()
+    .then((res => {
+        const places = res.data;
+        this.setState({
+            places: places
+        });
+    }))
+}
+componentDidMount() {
+    this._getPlaces();
+}
   _handleSubmit = (event) => {
     event.preventDefault();
     apiClient.suggestPlaces({
       name: this.state.name,
       description: this.state.description
     })
-      .then(() => {
+    .then(() => {
         this.setState({
-          name: '',
-          description: ''
+          name: "",
+          description: ""
         })
-      })
-      .then(this._getPlaces)
+        .then(this._getPlaces)        
+      }) 
   }
-  _handleChange = (event) => {
+  _handleChange = (event, field) => {
     const value = event.target.value;
     this.setState({
-      name: value.name,
-      description: value.description
+      [field]: value
     })
   }
   render() {
@@ -58,26 +71,28 @@ class AddPlaceForm extends React.Component {
           }}>
             <Paper style={styles} zDepth={3} >
               <h2 className="card-heading">Suggest a New Place</h2>
-              <form  style={{display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'}}>
+              <form style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}>
                 <TextField
-                  placeholder="Name of the Place"
-                  floatingLabelText='Name of the Place'
                   value={this.state.name}
-                  onChange={this._handleChange}
+                  onChange={(event) => this._handleChange(event, "name")}
                   type="text"
                   name="name"
-                  hintText='Name of the Place' />
+                  hintText='Name of the Place'
+                  placeholder="Name of the Place"
+                  floatingLabelText='Name of the Place' />
                 <TextField
-                  placeholder="Description"
-                  floatingLabelText="Description"
                   value={this.state.description}
-                  onChange={this._handleChange}
+                  onChange={(event) => this._handleChange(event, "description")}
                   type="text"
                   name="description"
-                  hintText="Description" 
-                  multiLine={true}/>
+                  hintText="Description"
+                  multiLine={true}
+                  placeholder="Description"
+                  floatingLabelText="Description" />
                 <RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
                   Save
         </RaisedButton>
@@ -89,5 +104,6 @@ class AddPlaceForm extends React.Component {
     )
   }
 }
+
 
 export default withStyles(styles)(AddPlaceForm);
