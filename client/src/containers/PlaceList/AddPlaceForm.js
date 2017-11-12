@@ -27,11 +27,6 @@ class AddPlaceForm extends React.Component {
       description: ''
     }
   }
-   
-  redirect = () => {
-    //window.location.href = "/";
-    this.props.history.push("/")
-}
 
   _handleSubmit = (event) => {
     event.preventDefault();
@@ -44,10 +39,10 @@ class AddPlaceForm extends React.Component {
           name: "",
           description: ""
         })
-        this.redirect()
+        this.props.history.push("/")
       })
-      
   }
+
   _handleChange = (event, field) => {
     const value = event.target.value;
     this.setState({

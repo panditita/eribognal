@@ -23,8 +23,8 @@ router.get('/places', function (req, res, next) {
     })
 })
 
-router.post('/places', function(req, res, next) {
-    const callback = () => {res.send(200)}
+router.post('/places', function (req, res, next) {
+    const callback = () => { res.send(200) }
     placesDB.addNewPlace(req.body, callback)
 });
 
