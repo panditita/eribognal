@@ -18,9 +18,10 @@ router.get('/questions', function (req, res, next) {
 });
 
 router.get('/places', function (req, res, next) {
-    Place.find({}, (error, data) => {
-        res.json(data)
-    })
+    const callback = (error, places) => {
+        res.send(places);
+    };
+    placesDB.getPlaces({}, callback);
 })
 
 router.post('/places', function (req, res, next) {
@@ -28,4 +29,18 @@ router.post('/places', function (req, res, next) {
     placesDB.addNewPlace(req.body, callback)
 });
 
-module.exports = router;
+router.get('/places/:placeId', function (req, res, next) {
+    const body = req.body;
+    const placeId = req.params.placeId;
+
+    const callback = (error, data) => {
+        if (error) {
+            console.error(error);
+            return res.send(500);
+        }
+        res.json(data);
+    }
+    placesDB.viewPlaces({ _id: placeId }, callback);
+});
+
+module.exports = router

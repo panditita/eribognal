@@ -8,11 +8,14 @@ const apiClient = {
     getPlaces: () => {
         return axios.get(`${apiUrl}/api/places`);
     },
-    suggestPlaces: (places) => {        
-        return axios.post(`${apiUrl}/api/places`,  {
-           name: places.name,
-           description: places.description
-          });
+    suggestPlaces: (places) => {
+        return axios.post(`${apiUrl}/api/places`, {
+            name: places.name,
+            description: places.description
+        })
+    },
+    viewPlaces: (placeId) => {
+        return axios.get(`${apiUrl}/api/places/${placeId}`);
     }
 }
 
