@@ -29,9 +29,12 @@ const styles = ({
     },
     cardList: {
         display: "flex",
-        alignItems: "baseline",
-        justifyContent: "flex-start",
-        padding: 10,
+        flexDirection: "column",  
+        alignItems: "flex-start",
+        paddingLeft: 20,
+        marginLeft: 10,
+        paddingTop: 15,
+       
     }
 });
 
@@ -53,7 +56,11 @@ class PlacesList extends React.Component {
     }
     render() {
         return (
-            <Grid container spacing={24}>
+            <Grid container spacing={24} className="listPlaces" style={ 
+                {display: "flex",
+                flexDirection: "column",
+                alignItems: "stretch",
+                }}>
                 {
                     this.state.places.map((place) => {
                         return (
