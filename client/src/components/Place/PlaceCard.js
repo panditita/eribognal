@@ -1,19 +1,10 @@
 import React from 'react';
 import Grid from 'material-ui/Grid';
-import Avatar from 'material-ui/Avatar';
 import { withStyles } from 'material-ui/styles';
 import List, { ListItem } from 'material-ui/List';
 
-const styles =  ({
-    listPlaces: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        alignSelf: "baseline",
-        paddingLeft: 10,
-        margin: 0,        
-    },
-
+const styles = ({
+  
     listTitle: {
         fontFamily: "Roboto-Medium",
         fontSize: 20,
@@ -35,15 +26,10 @@ const styles =  ({
         color: "rgba(0,0,0,0.54)",
         lineHeight: 2.1,
     },
+    listItem:{
 
-    listSeparator: {
-        color: "#E0E0E0",
-    },
-
-    listIcon: {
-        width: 40,
-        height: 40,
     }
+
 });
 
 
@@ -54,24 +40,16 @@ const PlaceCard = props => {
         <div>
             <Grid container spacing={24}>
                 <Grid item xs={12}>
-                    <List>
-
-                        <ListItem style={styles.listItem}>
-                            <Avatar style={{alignSelf: "baseline"}}>
-                                <img src="../icon-growing-project.jpg" style={styles.listIcon} />
-                            </Avatar>
-                            <div style={styles.listPlaces}>
+                        <ListItem className="listItem" style={ 
+                                    {display: "flex",
+                                    flexDirection: "column",
+                                    padding:0,
+                                    }}>
                                 <p style={styles.listTitle}> {place.name} </p>
                                 <p style={styles.listAddress}>{place.address} </p>
                                 <p style={styles.listDetails}> {place.description} </p>
-                            </div>
+                            
                         </ListItem>
-                        <ListItem >
-                        </ListItem>
-                    </List>
-                    {/*   <Avatar >
-                            <img src="../icon-local-drink.jpg" style={styles.listIcon} />
-                        </Avatar> */}
                 </Grid>
             </Grid>
         </div>
