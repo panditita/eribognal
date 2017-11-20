@@ -27,19 +27,23 @@ const styles = {
 
 const PlaceCard = (props) => {
 	const place = props.place;
+	const getAddress = (place) => {
+		if (place.address) {
+			return;
+			<div>
+				<p style={styles.listAddress}>{place.address} </p>
+			</div>;
+		} else {
+			return null;
+		}
+	};
 	return (
 		<div style={styles.listItem}>
-			{place.address === '' || place.description === '' ? (
-				<div>
-					<p style={styles.listTitle}> {place.name} </p>
-				</div>
-			) : (
-				<div>
-					<p style={styles.listTitle}> {place.name} </p>
-					<p style={styles.listAddress}>{place.address} </p>
-					<p style={styles.listDetails}> {place.description} </p>
-				</div>
-			)}
+			<div>
+				<p style={styles.listTitle}> {place.name} </p>
+				{getAddress(place)}
+				<p style={styles.listDetails}> {place.description} </p>
+			</div>
 		</div>
 	);
 };
