@@ -7,20 +7,17 @@ const styles = {
 	listTitle: {
 		fontSize: 20,
 		color: 'rgba(0,0,0,0.87)',
-		letterSpacing: 0,
-		lineHeight: 2.8
+		letterSpacing: 0
 	},
 
 	listAddress: {
 		fontSize: 14,
-		color: 'rgba(0,0,0,0.54)',
-		lineHeight: 2.1
+		color: 'rgba(0,0,0,0.54)'
 	},
 
 	listDetails: {
 		fontSize: 14,
-		color: 'rgba(0,0,0,0.54)',
-		lineHeight: 2.1
+		color: 'rgba(0,0,0,0.54)'
 	},
 	listItem: {
 		display: 'flex',
@@ -37,9 +34,15 @@ const PlaceCard = (props) => {
 			<Grid container spacing={24}>
 				<Grid item xs={12}>
 					<ListItem style={styles.listItem}>
-						<p style={styles.listTitle}> {place.name} </p>
-						<p style={styles.listAddress}>{place.address} </p>
-						<p style={styles.listDetails}> {place.description} </p>
+						{place.address == '' || place.description == '' ? (
+							<p style={styles.listTitle}> {place.name} </p>
+						) : (
+							<div>
+								<p style={styles.listTitle}> {place.name} </p>
+								<p style={styles.listAddress}>{place.address} </p>
+								<p style={styles.listDetails}> {place.description} </p>
+							</div>
+						)}
 					</ListItem>
 				</Grid>
 			</Grid>
