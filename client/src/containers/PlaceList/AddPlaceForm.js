@@ -9,7 +9,7 @@ import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import PropTypes from 'prop-types';
-
+import AddAddress from "../../components/Place/AddAddress"
 
 
 const styles = ({
@@ -20,10 +20,22 @@ const styles = ({
   paper: {
     textAlign: 'center',
     height: 300,
-  },formControl: {
+  }, formControl: {
     minWidth: 120,
     margin: 10
+  },
+  formDiv: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  formContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    height: 250
   }
+
 });
 
 class AddPlaceForm extends React.Component {
@@ -32,15 +44,12 @@ class AddPlaceForm extends React.Component {
     this.state = {
       places: [],
       name: '',
+      address: '',
       description: '',
       selectedCategory: "-1",
 
     }
   }
-
-  handleChange = event => {
-    this.setState({ selectedCategory: event.target.value });
-  };
 
 
 
@@ -48,6 +57,7 @@ class AddPlaceForm extends React.Component {
     event.preventDefault();
     apiClient.suggestPlaces({
       name: this.state.name,
+      address: this.state.address,
       description: this.state.description,
       category: this.state.selectedCategory
 
@@ -55,8 +65,9 @@ class AddPlaceForm extends React.Component {
       .then(() => {
         this.setState({
           name: "",
+          address: "",
           description: "",
-          selectedCategory:""
+          selectedCategory: ""
         })
         this.props.history.push("/")
       })
@@ -73,19 +84,10 @@ class AddPlaceForm extends React.Component {
     return (
       <Grid container spacing={24}>
         <Grid item xs={12}>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}>
+          <div style={styles.formDiv}>
             <Paper style={styles} zDepth={8} >
               <h2 className="card-heading">Suggest a New Place</h2>
-              <form className={classes.container} autoComplete="off" style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                height: 250,
-              }}>
+              <form className={classes.container} autoComplete="off" style={styles.formContainer}>
                 <TextField
                   value={this.state.name}
                   onChange={(event) => this._handleChange(event, "name")}
@@ -94,6 +96,10 @@ class AddPlaceForm extends React.Component {
                   hintText='Name of the Place'
                   placeholder="Name of the Place"
                   floatingLabelText='Name of the Place' />
+
+                <AddAddress
+                  onChange={(address) => this._handleChange(address, "address")} />
+
                 <TextField
                   value={this.state.description}
                   onChange={(event) => this._handleChange(event, "description")}
@@ -104,15 +110,13 @@ class AddPlaceForm extends React.Component {
                   placeholder="Description"
                   floatingLabelText="Description" />
 
-
-
                 <FormControl className={classes.formControl}>
                   <Select style={styles}
                     value={this.state.selectedCategory}
                     onChange={(event) => this._handleChange(event, "selectedCategory")}
                   >
                     <MenuItem value="-1">Select Category</MenuItem>
-            
+
                     <MenuItem value="Growing Project">Growing Project</MenuItem>
                     <MenuItem value="Night Out">Night Out</MenuItem>
                     <MenuItem value="Shopping">Shopping</MenuItem>
@@ -132,7 +136,9 @@ class AddPlaceForm extends React.Component {
       </Grid>
     )
   }
+
 }
+
 AddPlaceForm.propTypes = {
   classes: PropTypes.object.isRequired,
 };

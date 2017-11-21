@@ -16,6 +16,14 @@ const schema = new Schema({
         type: String,
         required: [true, 'Name field is required']
     },
+    address: {
+        line1: { type: String },
+        line2: { type: String },
+        postcode: { type: String },
+        city: { type: String },
+        required: [true, 'Description field is required']
+
+    },
     description: {
         type: String,
         required: [true, 'Description field is required']
@@ -33,3 +41,4 @@ const schema = new Schema({
 const Place = mongoose.model('Place', schema);
 
 module.exports = Place;
+
