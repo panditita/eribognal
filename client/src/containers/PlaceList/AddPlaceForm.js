@@ -9,7 +9,7 @@ import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import PropTypes from 'prop-types';
-import AddAddress from "../../components/Place/AddAddress"
+import Address from "../../components/Place/Address"
 
 
 const styles = ({
@@ -33,25 +33,54 @@ const styles = ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: 250
   }
 
 });
 
+
+class AddAddress extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      places: [],
+      address: [''],
+      city: ''
+
+    }
+    this.trackAddress = this.trackAddress.bind(this);
+  }
+  trackAddress([address], city) {
+    this.setState({
+      address: [address],
+      city: city
+    })
+  }
+  render() {
+    return (
+      <div>
+        <Address
+          address={this.state.address} trackAddress={this.trackAddress}
+          city={this.state.city} trackAddress={this.trackAddress}
+        />
+      </div>
+    )
+  }
+}
+
+
 class AddPlaceForm extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       places: [],
       name: '',
-      address: '',
+      address: [],
+      city: '-1',
       description: '',
       selectedCategory: "-1",
-
     }
   }
-
-
 
   _handleSubmit = (event) => {
     event.preventDefault();
@@ -60,12 +89,13 @@ class AddPlaceForm extends React.Component {
       address: this.state.address,
       description: this.state.description,
       category: this.state.selectedCategory
-
     })
+
       .then(() => {
         this.setState({
           name: "",
-          address: "",
+          address: [],
+          city: "",
           description: "",
           selectedCategory: ""
         })
@@ -78,6 +108,8 @@ class AddPlaceForm extends React.Component {
     this.setState({
       [field]: value
     })
+    console.log(value);
+
   }
   render() {
     const { classes } = this.props;
@@ -88,6 +120,7 @@ class AddPlaceForm extends React.Component {
             <Paper style={styles} zDepth={8} >
               <h2 className="card-heading">Suggest a New Place</h2>
               <form className={classes.container} autoComplete="off" style={styles.formContainer}>
+
                 <TextField
                   value={this.state.name}
                   onChange={(event) => this._handleChange(event, "name")}
@@ -98,7 +131,11 @@ class AddPlaceForm extends React.Component {
                   floatingLabelText='Name of the Place' />
 
                 <AddAddress
-                  onChange={(address) => this._handleChange(address, "address")} />
+
+                  onChange={(event) => this._handleChange(event, "description")}
+                  onChange={(event) => this._handleChange(event, "city")}
+
+                />
 
                 <TextField
                   value={this.state.description}

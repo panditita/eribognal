@@ -16,14 +16,15 @@ const schema = new Schema({
         type: String,
         required: [true, 'Name field is required']
     },
-    address: {
-        line1: { type: String },
-        line2: { type: String },
-        postcode: { type: String },
-        city: { type: String },
-        required: [true, 'Description field is required']
+    address: [
+        {
+            line1: String,
+            line2: String,
+            postcode: String,
+            city: String,
+        }, { required: [true, 'Description field is required'] }
 
-    },
+    ],
     description: {
         type: String,
         required: [true, 'Description field is required']
