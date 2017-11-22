@@ -9,7 +9,8 @@ import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import PropTypes from 'prop-types';
-import Address from "../../components/Place/Address"
+import { Address } from "../../components/Place/Address";
+import Input, { InputLabel } from 'material-ui/Input';
 
 
 const styles = ({
@@ -33,39 +34,13 @@ const styles = ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  addressContainer: {
+    display: 'flex',
+    flexDirection: "column",
   }
 
 });
-
-
-class AddAddress extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      places: [],
-      address: [''],
-      city: ''
-
-    }
-    this.trackAddress = this.trackAddress.bind(this);
-  }
-  trackAddress([address], city) {
-    this.setState({
-      address: [address],
-      city: city
-    })
-  }
-  render() {
-    return (
-      <div>
-        <Address
-          address={this.state.address} trackAddress={this.trackAddress}
-          city={this.state.city} trackAddress={this.trackAddress}
-        />
-      </div>
-    )
-  }
-}
 
 
 class AddPlaceForm extends React.Component {
@@ -75,8 +50,12 @@ class AddPlaceForm extends React.Component {
     this.state = {
       places: [],
       name: '',
-      address: [],
-      city: '-1',
+      address: [{
+        line1: "",
+        line2: "",
+        postcode: "",
+        city: "",
+      }],
       description: '',
       selectedCategory: "-1",
     }
@@ -86,7 +65,13 @@ class AddPlaceForm extends React.Component {
     event.preventDefault();
     apiClient.suggestPlaces({
       name: this.state.name,
-      address: this.state.address,
+      address: [{
+        line1: this.state.address.line1,
+        line2: this.state.address.line2,
+        postcode: this.state.address.postcode,
+      },
+      { city: this.state.address.city }
+      ],
       description: this.state.description,
       category: this.state.selectedCategory
     })
@@ -94,8 +79,14 @@ class AddPlaceForm extends React.Component {
       .then(() => {
         this.setState({
           name: "",
-          address: [],
-          city: "",
+          address: [
+            {
+              line1: "",
+              line2: "",
+              postcode: "",
+              city: ""
+            }
+          ],
           description: "",
           selectedCategory: ""
         })
@@ -126,26 +117,61 @@ class AddPlaceForm extends React.Component {
                   onChange={(event) => this._handleChange(event, "name")}
                   type="text"
                   name="name"
-                  hintText='Name of the Place'
-                  placeholder="Name of the Place"
-                  floatingLabelText='Name of the Place' />
-
-                <AddAddress
-
-                  onChange={(event) => this._handleChange(event, "description")}
-                  onChange={(event) => this._handleChange(event, "city")}
-
+                  helperText='Name of the Place'
                 />
+                <div className="addressContainer" style={styles.addressContainer}>
+                  <TextField
+                    value={this.state.address.line1}
+                    onChange={(event) => this._handleChange(event, "line2")}
+                    type="text"
+                    name="line1"
+                    helperText="Address line 1"
+                  />
+                  <TextField
+                    value={this.state.address.line2}
+                    onChange={(event) => this._handleChange(event, "line2")}
+                    type="text"
+                    name="line2"
+                    helperText="Address line 2"
+                  />
+                  <TextField
+                    value={this.state.address.postcode}
+                    onChange={(event) => this._handleChange(event, "postcode")}
+                    type="text"
+                    name="postcode"
+                    helperText="Postcode"
+                  />
+                  <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="city">City</InputLabel>
+                    <TextField
+                      name="city"
+                      id="city"
+                      select
+                      className={classes.textField}
+                      SelectProps={{
+                        native: true,
+                        MenuProps: {
+                          className: classes.menu,
+                        },
+                      }}
+                      helperText="Select your city"
+                      margin="normal"
+                      value={this.state.city}
+                      onChange={(event) => this._handleChange(event, "city")}>
+                      <MenuItem value="0"> Glasgow</MenuItem>
+                    </TextField>
+
+                  </FormControl >
+                </div>
 
                 <TextField
                   value={this.state.description}
                   onChange={(event) => this._handleChange(event, "description")}
                   type="text"
                   name="description"
-                  hintText="Description"
-                  multiLine={true}
-                  placeholder="Description"
-                  floatingLabelText="Description" />
+                  helperText="Description"
+                  multiline rowsMax="4"
+                />
 
                 <FormControl className={classes.formControl}>
                   <Select style={styles}

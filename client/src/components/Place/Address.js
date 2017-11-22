@@ -11,7 +11,7 @@ const styles = ({
     }
 });
 
-class City extends React.Component {
+export class City extends React.Component {
     render() {
         const classes = this.props;
         const city = "Glasgow";
@@ -39,7 +39,7 @@ class City extends React.Component {
     }
 }
 
-class Address extends React.Component {
+export class Address extends React.Component {
     constructor(props) {
         super(props);
         this.trackAddress = this.trackAddress.bind(this);
@@ -60,7 +60,7 @@ class Address extends React.Component {
                 <TextField
                     value={this.address.line1}
                     type="text"
-                    name="address"
+                    name="line1"
                     hintText='Line 1'
                     placeholder="Address line 1"
                     floatingLabelText='Address of the Place'
@@ -68,7 +68,7 @@ class Address extends React.Component {
                 <TextField
                     value={this.address.line2}
                     type="text"
-                    name="address"
+                    name="line2"
                     hintText='line 2'
                     placeholder="Address line 2"
                     floatingLabelText='Address of the Place'
@@ -76,15 +76,14 @@ class Address extends React.Component {
                 <TextField
                     value={this.address.postcode}
                     type="text"
-                    name="address"
+                    name="postcode"
                     hintText='postcode'
                     placeholder="Postcode"
                     floatingLabelText='Address of the Place'
                 />
-                <City value={this.city} />
+
             </div>)
     }
 }
 
-export default withStyles(styles)(Address);
 
