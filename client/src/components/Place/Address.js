@@ -11,7 +11,7 @@ const styles = ({
     }
 });
 
-export class City extends React.Component {
+class City extends React.Component {
     render() {
         const classes = this.props;
         const city = "Glasgow";
@@ -31,7 +31,9 @@ export class City extends React.Component {
                         value: city,
                     }}
                     helperText="Please select your city"
-                    margin="normal">
+                    margin="normal"
+                    onChange={(event) => this.props.onChange(event, "city")}
+                >
                     <MenuItem value="0"> Glasgow</MenuItem>
                 </TextField>
             </FormControl >
@@ -39,51 +41,58 @@ export class City extends React.Component {
     }
 }
 
-export class Address extends React.Component {
+class Address extends React.Component {
     constructor(props) {
         super(props);
-        this.trackAddress = this.trackAddress.bind(this);
-        this.trackAddress = this.trackAddress.bind(this);
+        this._trackAddress = this._trackAddress.bind(this);
+        this._trackAddress = this._trackAddress.bind(this);
         this.address = this.props.address;
         this.city = this.props.city;
     }
 
-    trackAddress() {
+    _trackAddress() {
+
         this.props.addAddress(this.address)
         this.props.addAddress(this.city)
+
     }
 
     render() {
         return (
-            <div className="addressContainer" style={styles.addressContainer}>
-                {this.props.address}
+            <div style={styles.addressContainer}>
                 <TextField
                     value={this.address.line1}
                     type="text"
-                    name="line1"
+                    name="address"
                     hintText='Line 1'
                     placeholder="Address line 1"
                     floatingLabelText='Address of the Place'
+                    onChange={(event) => this.props.onChange(event, "line1")}
                 />
                 <TextField
                     value={this.address.line2}
                     type="text"
-                    name="line2"
+                    name="address"
                     hintText='line 2'
                     placeholder="Address line 2"
                     floatingLabelText='Address of the Place'
+                    onChange={(event) => this.props.onChange(event, "line2")}
+
                 />
                 <TextField
                     value={this.address.postcode}
                     type="text"
-                    name="postcode"
+                    name="address"
                     hintText='postcode'
                     placeholder="Postcode"
                     floatingLabelText='Address of the Place'
-                />
+                    onChange={(event) => this.props.onChange(event, "postcode")}
 
-            </div>)
+                />
+            </div>
+        )
     }
 }
 
+export { Address, City };
 
