@@ -44,20 +44,13 @@ class City extends React.Component {
 class Address extends React.Component {
     constructor(props) {
         super(props);
-        this._trackAddress = this._trackAddress.bind(this);
-        this._trackAddress = this._trackAddress.bind(this);
         this.address = this.props.address;
         this.city = this.props.city;
     }
 
-    _trackAddress() {
-
-        this.props.addAddress(this.address)
-        this.props.addAddress(this.city)
-
-    }
 
     render() {
+        console.log("Address " + this.props.address + "city " + this.props.city)
         return (
             <div style={styles.addressContainer}>
                 <TextField

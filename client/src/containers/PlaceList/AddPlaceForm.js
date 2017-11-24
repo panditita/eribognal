@@ -34,53 +34,8 @@ const styles = ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-
-
 });
 
-
-class AddAddress extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      places: [],
-      address: [{
-        line1: "",
-        line2: "",
-        postcode: "",
-      }],
-      city: ''
-    }
-    this.trackAddress = this.trackAddress.bind(this);
-  }
-  trackAddress([address], city) {
-    this.setState({
-      address: [{
-        line1: address.line1,
-        line2: address.line2,
-        postcode: address.postcode
-      }],
-      city: city
-    })
-  }
-  render() {
-    return (
-      <div>
-        <Address
-          address={
-            this.state.address
-          }
-          trackAddress={this.trackAddress}
-        />
-        <City
-          city={
-            this.state.city
-          }
-        />
-      </div>
-    )
-  }
-}
 
 class AddPlaceForm extends React.Component {
 
@@ -89,15 +44,11 @@ class AddPlaceForm extends React.Component {
     this.state = {
       places: [],
       name: '',
-      address: [{
-        line1: "",
-        line2: "",
-        postcode: "",
-      },
-      {
-        city: "",
-      }
-      ],
+      address: [],
+      line1: '',
+      line2: '',
+      postcode: '',
+      city: '',
       description: '',
       selectedCategory: "-1",
     }
@@ -105,6 +56,7 @@ class AddPlaceForm extends React.Component {
 
   _handleSubmit = (event) => {
     event.preventDefault();
+    console.log(this.state.address.line1 + "Form Line !1")
     apiClient.suggestPlaces({
       name: this.state.name,
       address: [
@@ -116,7 +68,8 @@ class AddPlaceForm extends React.Component {
       ],
       description: this.state.description,
       category: this.state.selectedCategory
-    })
+    }
+    )
 
       .then(() => {
         this.setState({
@@ -134,7 +87,7 @@ class AddPlaceForm extends React.Component {
     this.setState({
       [field]: value
     })
-    console.log(value);
+    console.log(value)
 
   }
   render() {
@@ -156,7 +109,17 @@ class AddPlaceForm extends React.Component {
                   placeholder="Name of the Place"
                   floatingLabelText='Name of the Place' />
 
-                <AddAddress onChange={() => this._handleChange()} />
+                <Address
+                  address={
+                    this.state.address
+                  }
+                  onChange={(event) => this._handleChange(event, "address")} />
+                <City
+                  city={
+                    this.state.city
+                  }
+                  onChange={(event) => this._handleChange(event, "city")}
+                />
 
 
                 <TextField
@@ -192,7 +155,7 @@ class AddPlaceForm extends React.Component {
             </Paper>
           </div>
         </Grid>
-      </Grid>
+      </Grid >
     )
   }
 
