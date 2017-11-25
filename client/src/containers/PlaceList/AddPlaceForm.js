@@ -9,7 +9,7 @@ import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import PropTypes from 'prop-types';
-import { Address, City } from "../../components/Place/Address";
+import { Address } from "../../components/Place/Address";
 
 
 const styles = ({
@@ -44,11 +44,12 @@ class AddPlaceForm extends React.Component {
     this.state = {
       places: [],
       name: '',
-      address: [],
-      line1: '',
-      line2: '',
-      postcode: '',
-      city: '',
+      address: {
+        line1: '',
+        line2: '',
+        postcode: '',
+        city: '-1'
+      },
       description: '',
       selectedCategory: "-1",
     }
@@ -56,25 +57,28 @@ class AddPlaceForm extends React.Component {
 
   _handleSubmit = (event) => {
     event.preventDefault();
-    console.log(this.state.address.line1 + "Form Line !1")
     apiClient.suggestPlaces({
       name: this.state.name,
-      address: [
+      address:
         {
           line1: this.state.address.line1,
           line2: this.state.address.line2,
           postcode: this.state.address.postcode,
-        }, { city: this.state.address.city }
-      ],
+          city: this.state.address.city
+        },
       description: this.state.description,
       category: this.state.selectedCategory
-    }
-    )
+    })
 
       .then(() => {
         this.setState({
           name: "",
-          address: [],
+          address: {
+            line1: "",
+            line2: "",
+            postcode: "",
+            city: "",
+          },
           description: "",
           selectedCategory: ""
         })
@@ -87,9 +91,18 @@ class AddPlaceForm extends React.Component {
     this.setState({
       [field]: value
     })
-    console.log(value)
-
   }
+
+  _handleAddress = (event, field) => {
+    const value = event.target.value;
+    this.setState({
+      address: {
+        ...this.state.address,
+        [field]: value
+      }
+    })
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -110,16 +123,9 @@ class AddPlaceForm extends React.Component {
                   floatingLabelText='Name of the Place' />
 
                 <Address
-                  address={
-                    this.state.address
-                  }
-                  onChange={(event) => this._handleChange(event, "address")} />
-                <City
-                  city={
-                    this.state.city
-                  }
-                  onChange={(event) => this._handleChange(event, "city")}
-                />
+                  onChange={(event, field) => this._handleAddress(event, field)}
+                  city={this.state.address.city} />
+
 
 
                 <TextField
@@ -155,7 +161,7 @@ class AddPlaceForm extends React.Component {
             </Paper>
           </div>
         </Grid>
-      </Grid >
+      </Grid>
     )
   }
 
@@ -166,3 +172,4 @@ AddPlaceForm.propTypes = {
 };
 
 export default withStyles(styles)(AddPlaceForm);
+

@@ -3,6 +3,9 @@ import TextField from 'material-ui/TextField';
 import { MenuItem } from 'material-ui/Menu';
 import { withStyles } from 'material-ui/styles';
 import { FormControl } from 'material-ui/Form';
+import Select from 'material-ui/Select';
+import Input, { InputLabel } from 'material-ui/Input';
+
 
 const styles = ({
     addressContainer: {
@@ -11,61 +14,27 @@ const styles = ({
     }
 });
 
-class City extends React.Component {
-    render() {
-        const classes = this.props;
-        const city = "Glasgow";
-
-        return (
-            <FormControl className={classes.formControl}>
-                <TextField
-                    name="city"
-                    id="city"
-                    select
-                    className={classes.textField}
-                    value={this.props.city}
-                    SelectProps={{
-                        MenuProps: {
-                            className: classes.menu,
-                        },
-                        value: city,
-                    }}
-                    helperText="Please select your city"
-                    margin="normal"
-                    onChange={(event) => this.props.onChange(event, "city")}
-                >
-                    <MenuItem value="0"> Glasgow</MenuItem>
-                </TextField>
-            </FormControl >
-        )
-    }
-}
 
 class Address extends React.Component {
-    constructor(props) {
-        super(props);
-        this.address = this.props.address;
-        this.city = this.props.city;
-    }
-
 
     render() {
-        console.log("Address " + this.props.address + "city " + this.props.city)
+        const classes = this.props;
+        console.log(this.props.city)
         return (
             <div style={styles.addressContainer}>
                 <TextField
-                    value={this.address.line1}
+                    value={this.props.line1}
                     type="text"
-                    name="address"
+                    name="line1"
                     hintText='Line 1'
                     placeholder="Address line 1"
                     floatingLabelText='Address of the Place'
                     onChange={(event) => this.props.onChange(event, "line1")}
                 />
                 <TextField
-                    value={this.address.line2}
+                    value={this.props.line2}
                     type="text"
-                    name="address"
+                    name="line2"
                     hintText='line 2'
                     placeholder="Address line 2"
                     floatingLabelText='Address of the Place'
@@ -73,19 +42,30 @@ class Address extends React.Component {
 
                 />
                 <TextField
-                    value={this.address.postcode}
+                    value={this.props.postcode}
                     type="text"
-                    name="address"
+                    name="postcode"
                     hintText='postcode'
                     placeholder="Postcode"
                     floatingLabelText='Address of the Place'
                     onChange={(event) => this.props.onChange(event, "postcode")}
-
                 />
+
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="City">Select City</InputLabel>
+                    <Select style={styles}
+                        value={this.props.city}
+                        onChange={(event) => this.props.onChange(event, "city")}
+                        name="city">
+
+                        <MenuItem value="-1">Select City</MenuItem>
+                        <MenuItem value="Glasgow">Glasgow</MenuItem>
+                    </Select>
+                </FormControl >
             </div>
         )
     }
 }
 
-export { Address, City };
+export { Address };
 
