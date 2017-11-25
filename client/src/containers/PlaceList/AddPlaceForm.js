@@ -117,7 +117,7 @@ class AddPlaceForm extends React.Component {
           error: undefined
         })
         alert('You Have Successfully Submited the form, Thank You')
-        this.props.history.push("/new-place")
+        this.props.history.push("/places")
       }
       )
       .catch((error) => {
@@ -171,8 +171,6 @@ class AddPlaceForm extends React.Component {
                   onChange={(event, field) => this._handleAddress(event, field)}
                   city={this.state.address.city} />
 
-
-
                 <TextField
                   value={this.state.description}
                   onChange={(event) => this._handleChange(event, "description")}
@@ -200,8 +198,6 @@ class AddPlaceForm extends React.Component {
                 <RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
                   Save
         </RaisedButton>
-
-
               </form>
             </Paper>
           </div>
