@@ -10,26 +10,56 @@ import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import PropTypes from 'prop-types';
 import { Address } from "../../components/Place/Address";
-
+import Spinner from '../../components/Spinner/Spinner';
+import { InputLabel } from 'material-ui/Input';
 
 const styles = ({
   root: {
     flexGrow: 1,
-
+  },
+  layoutStyle: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   paper: {
     textAlign: 'center',
     height: 300,
-  }, formControl: {
-    minWidth: 120,
-    margin: 10
   },
+
   formDiv: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
   },
   formContainer: {
+    width: 300,
+    border: '2px solid gray',
+  },
+  paperX: {
+    textAlign: 'center',
+    width: 300,
+    border: '2px solid #c12020',
+    backgroundColor: '#ffeaea'
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 5,
+    width: 300,
+  },
+  formControl: {
+    minWidth: 180,
+    margin: 10
+  },
+  formStyle: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    height: 250,
+    width: 300,
+  },
+  titleStyle: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -52,6 +82,9 @@ class AddPlaceForm extends React.Component {
       },
       description: '',
       selectedCategory: "-1",
+      error: undefined,
+      selectedCategory: "",
+      isLoading: false
     }
   }
 
@@ -69,8 +102,7 @@ class AddPlaceForm extends React.Component {
       description: this.state.description,
       category: this.state.selectedCategory
     })
-
-      .then(() => {
+      .then((response) => {
         this.setState({
           name: "",
           address: {
@@ -80,12 +112,20 @@ class AddPlaceForm extends React.Component {
             city: "",
           },
           description: "",
-          selectedCategory: ""
+          selectedCategory: "",
+          isLoading: true,
+          error: undefined
         })
-        this.props.history.push("/")
+        alert('You Have Successfully Submited the form, Thank You')
+        this.props.history.push("/new-place")
+      }
+      )
+      .catch((error) => {
+        this.setState({
+          error
+        })
       })
   }
-
   _handleChange = (event, field) => {
     const value = event.target.value;
     this.setState({
@@ -101,6 +141,11 @@ class AddPlaceForm extends React.Component {
         [field]: value
       }
     })
+  }
+  showError = () => {
+    if (this.state.error !== undefined) {
+      return (<div style={styles.error}>An Error Has Happened</div>)
+    }
   }
 
   render() {
@@ -164,8 +209,8 @@ class AddPlaceForm extends React.Component {
       </Grid>
     )
   }
-
 }
+
 
 AddPlaceForm.propTypes = {
   classes: PropTypes.object.isRequired,
