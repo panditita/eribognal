@@ -9,9 +9,18 @@ import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import PropTypes from 'prop-types';
-import { Address } from "../../components/Place/Address";
 import Spinner from '../../components/Spinner/Spinner';
 import { InputLabel } from 'material-ui/Input';
+import { Address } from "../../components/Place/Address";
+import AddImage from "../../components/Place/AddImage";
+import Button from 'material-ui/Button';
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  withMobileDialog,
+} from 'material-ui/Dialog';
 
 const styles = ({
   root: {
@@ -24,15 +33,7 @@ const styles = ({
   },
   paper: {
     textAlign: 'center',
-    height: 300,
-  },
-
-  formDiv: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  formContainer: {
+    height: 500,
     width: 300,
     border: '2px solid gray',
   },
@@ -40,6 +41,7 @@ const styles = ({
     textAlign: 'center',
     width: 300,
     border: '2px solid #c12020',
+    height: 500,
     backgroundColor: '#ffeaea'
   },
   error: {
@@ -56,7 +58,7 @@ const styles = ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: 250,
+    height: 350,
     width: 300,
   },
   titleStyle: {
@@ -78,13 +80,14 @@ class AddPlaceForm extends React.Component {
         line1: '',
         line2: '',
         postcode: '',
-        city: '-1'
+        city: ''
       },
       description: '',
       selectedCategory: "-1",
+      file: null,
       error: undefined,
-      selectedCategory: "",
-      isLoading: false
+      isLoading: false,
+      open: false,
     }
   }
 
@@ -100,8 +103,8 @@ class AddPlaceForm extends React.Component {
           city: this.state.address.city
         },
       description: this.state.description,
-      category: this.state.selectedCategory
-    })
+      category: this.state.selectedCategory,
+    }, this.state.file)
       .then((response) => {
         this.setState({
           name: "",
@@ -113,26 +116,40 @@ class AddPlaceForm extends React.Component {
           },
           description: "",
           selectedCategory: "",
-          isLoading: true,
-          error: undefined
+          open: true,
+          error: undefined,
         })
-        alert('You Have Successfully Submited the form, Thank You')
         this.props.history.push("/places")
       }
       )
       .catch((error) => {
         this.setState({
-          error
+          open: true,
+          error,
         })
       })
   }
+
+  handleRequestClosex = () => {
+    this.setState({
+      open: false,
+      isLoading: false,
+    });
+  }
+
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+      isLoading: true,
+    });
+  }
+
   _handleChange = (event, field) => {
     const value = event.target.value;
     this.setState({
       [field]: value
     })
   }
-
   _handleAddress = (event, field) => {
     const value = event.target.value;
     this.setState({
@@ -142,68 +159,108 @@ class AddPlaceForm extends React.Component {
       }
     })
   }
+  onFileChange = (e) => {
+    this.setState({ file: e.target.files[0] })
+  }
   showError = () => {
     if (this.state.error !== undefined) {
-      return (<div style={styles.error}>An Error Has Happened</div>)
+      return (
+        <Dialog
+          open={this.state.open}
+          onRequestClose={this.handleRequestClosex}
+        >
+          <DialogTitle>{"Error"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              An Error Has Happened, Please Make Sure That You have entered all the details
+                     </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleRequestClosex} color="primary">
+              OK
+             </Button>
+          </DialogActions>
+        </Dialog>
+      )
     }
   }
 
   render() {
     const { classes } = this.props;
-    return (
-      <Grid container spacing={24}>
-        <Grid item xs={12}>
-          <div style={styles.formDiv}>
-            <Paper style={styles} zDepth={8} >
-              <h2 className="card-heading">Suggest a New Place</h2>
-              <form className={classes.container} autoComplete="off" style={styles.formContainer}>
+    const { fullScreen } = this.props;
+    if (this.state.isLoading) {
 
-                <TextField
-                  value={this.state.name}
-                  onChange={(event) => this._handleChange(event, "name")}
-                  type="text"
-                  name="name"
-                  hintText='Name of the Place'
-                  placeholder="Name of the Place"
-                  floatingLabelText='Name of the Place' />
+      return <Spinner />
 
-                <Address
-                  onChange={(event, field) => this._handleAddress(event, field)}
-                  city={this.state.address.city} />
-
-                <TextField
-                  value={this.state.description}
-                  onChange={(event) => this._handleChange(event, "description")}
-                  type="text"
-                  name="description"
-                  hintText="Description"
-                  multiLine={true}
-                  placeholder="Description"
-                  floatingLabelText="Description" />
-
-                <FormControl className={classes.formControl}>
-                  <Select style={styles}
-                    value={this.state.selectedCategory}
-                    onChange={(event) => this._handleChange(event, "selectedCategory")}
+    } else {
+      return (
+        <Grid container spacing={24}>
+          <Grid item xs={12}>
+            <div style={styles.layoutStyle}>
+              <Paper style={!this.state.error ? styles.paper : styles.paperX} >
+                <h2 style={styles.titleStyle}>Suggest A New Place</h2>
+                <form autoComplete="off" style={styles.formStyle}>
+                  <Dialog
+                    fullScreen={fullScreen}
+                    open={this.state.open}
+                    onRequestClose={this.handleRequestClose}
                   >
-                    <MenuItem value="-1">Select Category</MenuItem>
 
-                    <MenuItem value="Growing Project">Growing Project</MenuItem>
-                    <MenuItem value="Night Out">Night Out</MenuItem>
-                    <MenuItem value="Shopping">Shopping</MenuItem>
-                    <MenuItem value="Eating Out">Eating Out</MenuItem>
-
-                  </Select>
-                </FormControl>
-                <RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
-                  Save
-        </RaisedButton>
-              </form>
-            </Paper>
-          </div>
+                    <DialogTitle>{"Thank You"}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                        You have Successfully submitted the form
+                     </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={this.handleRequestClose} color="primary">
+                        OK
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                  <TextField
+                    required
+                    id="required"
+                    label="Name of the Place"
+                    value={this.state.name}
+                    onChange={(event) => this._handleChange(event, "name")}
+                    type="text"
+                    name="name"
+                    placeholder="Name of the Place" />
+                  <TextField
+                    required
+                    id="required"
+                    label="Description"
+                    value={this.state.description}
+                    onChange={(event) => this._handleChange(event, "description")}
+                    type="text"
+                    name="description"
+                    placeholder="Description" />
+                  <Address
+                    onChange={(event, field) => this._handleAddress(event, field)}
+                    city={this.state.address.city} />
+                  <FormControl required className={classes.formControl}>
+                    <InputLabel htmlFor="Select Category">Select Category</InputLabel>
+                    <Select style={styles}
+                      value={this.state.selectedCategory}
+                      onChange={(event) => this._handleChange(event, "selectedCategory")}>
+                      <MenuItem value="Growing Project">Growing Project</MenuItem>
+                      <MenuItem value="Night Out">Night Out</MenuItem>
+                      <MenuItem value="Shopping">Shopping</MenuItem>
+                      <MenuItem value="Eating Out">Eating Out</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <input type="file" accept=".png,.jpg,.jpeg,.gif" onChange={this.onFileChange} />
+                  <RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
+                    Save </RaisedButton>
+                  {this.showError()}
+                </form>
+              </Paper>
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
-    )
+      )
+    }
   }
 }
 
