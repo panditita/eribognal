@@ -12,7 +12,6 @@ import PropTypes from 'prop-types';
 import Spinner from '../../components/Spinner/Spinner';
 import { InputLabel } from 'material-ui/Input';
 import { Address } from "../../components/Place/Address";
-import AddImage from "../../components/Place/AddImage";
 import Button from 'material-ui/Button';
 import Dialog, {
   DialogActions,
