@@ -5,6 +5,14 @@ import Send from 'material-ui-icons/Send';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 import Spinner from '../../components/Spinner/Spinner'
+//import { stringify } from 'querystring';
+import Dialog, {
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    //   withMobileDialog,
+} from 'material-ui/Dialog';
 
 
 const styles = theme => ({
@@ -25,22 +33,29 @@ class Questions extends React.Component {
         this.state = {
             questions: [],
             answers: [],
+            savedAnswers: {},
             isLoading: false,
-            selectedAnswers: {}
-            
+            open: false,
+            error: undefined,
+            selectedAnswers: {},
         };
     }
 
     componentDidMount() {
-        apiClient.getQuestions()
-            .then(this.showQuestions);
+        apiClient.getQuestions().then(this.showQuestions);
+        const answersJSON = JSON.parse(localStorage.getItem('answers'));
+        if (answersJSON) {
+            const savedAnswers = answersJSON;
+            this.setState({
+                savedAnswers
+            })
+        }
     }
 
     showQuestions = (response) => {
         this.setState({
             questions: response.data
         })
-
     }
     onSelect = (question, event) => {
         const value = event.target.value;
@@ -51,7 +66,6 @@ class Questions extends React.Component {
         question.options.map(option => option.selected = false)
         selectedOption.selected = true;
 
-
         const selectedAnswers = this.state.selectedAnswers;
         selectedAnswers[question.questionId] = event.target.value;
 
@@ -61,16 +75,88 @@ class Questions extends React.Component {
     }
     handleSubmit = (event) => {
         event.preventDefault();
-        this.setState({
-            isLoading: true
-        })
-        apiClient.saveAnswer({
-            answers: this.state.questions
-        })
-            .then(() => {
 
-                this.props.history.push("/")
+        const body = { answers: this.state.questions };
+        const data = this.state.savedAnswers;
+
+        if (data) {
+            body._id = data._id;
+        }
+        apiClient.saveAnswer(body)
+            .then((response) => {
+                this.setState({
+                    open: true,
+                    error: undefined,
+                })
+                const data = response.data;
+                localStorage.setItem("answers", JSON.stringify(data));
             })
+            .catch((error) => {
+                this.setState({
+                    open: true,
+                    error,
+                })
+            })
+    }
+
+    handleRequestCloseError = () => {
+        this.setState({
+            open: false,
+            isLoading: false,
+        });
+    }
+
+    handleRequestClose = () => {
+        this.props.history.push("/")
+
+        this.setState({
+            open: false,
+            isLoading: false,
+        });
+    }
+
+    showConfirmation = () => {
+        if (!this.state.open) return null;
+        const { fullScreen } = this.props;
+        if (this.state.error) {
+            return (
+                <Dialog
+                    open={this.state.open}
+                    onRequestClose={this.handleRequestCloseError}
+                >
+                    <DialogTitle>{"Error"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            An error has happened, make sure you have answer all the questions!
+					 </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleRequestCloseError} color="primary">
+                            OK
+			 </Button>
+                    </DialogActions>
+                </Dialog>
+            )
+        } else {
+            return (<Dialog
+                fullScreen={fullScreen}
+                open={this.state.open}
+                onRequestClose={this.handleRequestClose}
+            >
+
+                <DialogTitle>{"Thank You"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        You have successfully submitted your answers
+			</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleRequestClose} color="primary">
+                        OK
+			</Button>
+                </DialogActions>
+            </Dialog>);
+        }
     }
 
     render() {
@@ -92,6 +178,7 @@ class Questions extends React.Component {
                         Send
                     <Send className={this.props.classes.rightIcon} />
                     </Button>
+                    {this.showConfirmation()}
                 </div>
             );
         }

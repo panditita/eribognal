@@ -48,6 +48,7 @@ router.post('/places', function (req, res, next) {
 
 router.post('/answers', function (req, res, next) {
     const callback = (answers) => {
+        console.log(answers)
         res.send(answers)
     }
     const errorCallback = (error) => {
