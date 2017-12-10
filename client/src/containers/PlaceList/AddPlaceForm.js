@@ -29,6 +29,10 @@ const styles = ({
 	paperX: {
 		backgroundColor: '#ffeaea'
 	},
+	categoryList: {
+		width: '100%',
+		paddingLeft: 100,
+	},
 	formStyle: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -63,6 +67,9 @@ class AddPlaceForm extends React.Component {
 
 	_handleSubmit = (event) => {
 		event.preventDefault();
+		this.setState({
+			isLoading: true
+		})
 		apiClient.suggestPlaces({
 			name: this.state.name,
 			address:
@@ -76,6 +83,7 @@ class AddPlaceForm extends React.Component {
 			category: this.state.selectedCategory,
 		}, this.state.file)
 			.then((response) => {
+				setTimeout(() => { this.setState({ isLoading: false }) }, 1000)
 				this.setState({
 					name: "",
 					address: {
@@ -89,6 +97,7 @@ class AddPlaceForm extends React.Component {
 					open: true,
 					error: undefined,
 				})
+				this.props.history.push("/places")
 			}
 			)
 			.catch((error) => {
@@ -99,20 +108,15 @@ class AddPlaceForm extends React.Component {
 			})
 	}
 
-	handleRequestCloseError = () => {
+	handleRequestClosex = () => {
 		this.setState({
 			open: false,
-			isLoading: false,
 		});
 	}
 
 	handleRequestClose = () => {
-
-		this.props.history.push("/places")
-
 		this.setState({
 			open: false,
-			isLoading: false,
 		});
 	}
 
@@ -134,16 +138,12 @@ class AddPlaceForm extends React.Component {
 	onFileChange = (e) => {
 		this.setState({ file: e.target.files[0] })
 	}
-
-	showConfirmation = () => {
-		if (!this.state.open) return null;
-
-		const { fullScreen } = this.props;
-		if (this.state.error) {
+	showError = () => {
+		if (this.state.error !== undefined) {
 			return (
 				<Dialog
 					open={this.state.open}
-					onRequestClose={this.handleRequestCloseError}
+					onRequestClose={this.handleRequestClosex}
 				>
 					<DialogTitle>{"Error"}</DialogTitle>
 					<DialogContent>
@@ -152,37 +152,16 @@ class AddPlaceForm extends React.Component {
 					 </DialogContentText>
 					</DialogContent>
 					<DialogActions>
-						<Button onClick={this.handleRequestCloseError} color="primary">
+						<Button onClick={this.handleRequestClosex} color="primary">
 							OK
 			 </Button>
 					</DialogActions>
 				</Dialog>
 			)
-		} else {
-			return (<Dialog
-				fullScreen={fullScreen}
-				open={this.state.open}
-				onRequestClose={this.handleRequestClose}
-			>
-
-				<DialogTitle>{"Thank You"}</DialogTitle>
-				<DialogContent>
-					<DialogContentText>
-						You have successfully suggested a new place!
-			</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={this.handleRequestClose} color="primary">
-						OK
-			</Button>
-				</DialogActions>
-			</Dialog>);
 		}
 	}
 
-
 	onSuggestSelect = (suggest) => {
-		console.log(suggest)
 		if (!suggest) return;
 
 		const { gmaps = {} } = suggest;
@@ -190,84 +169,108 @@ class AddPlaceForm extends React.Component {
 		const postCodeData = address_components[5] || {};
 		const cityData = address_components[1] || {};
 
+		onSuggestSelect = (suggest) => {
+			console.log(suggest)
+			if (!suggest) return;
 
-		this.setState({
-			address: {
-				line1: suggest.description || '',
-				line2: gmaps.formatted_address || '',
-				postcode: postCodeData.long_name || '',
-				city: cityData.long_name || '',
+			this.setState({
+				address: {
+					line1: suggest.description || '',
+					line2: gmaps.formatted_address || '',
+					postcode: postCodeData.long_name || '',
+					city: cityData.long_name || '',
+				}
+			})
+		}
+
+		render()
+		{
+			const { classes } = this.props;
+			const { fullScreen } = this.props;
+			if (this.state.isLoading) {
+				return <Spinner />
+			} else {
+				return (
+					<div style={styles.root}>
+						<Grid container spacing={24} style={!this.state.error ? styles.paper : styles.paperX} >
+							<Grid item xs={12}>
+								<h2>Suggest a New Place</h2>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<FormControl required className={classes.formControl}>
+									<InputLabel htmlFor="Select Category">Select Category</InputLabel>
+									<Select style={styles.categoryList}
+										value={this.state.selectedCategory}
+										onChange={(event) => this._handleChange(event, "selectedCategory")}>
+										<MenuItem value="Growing Project">Growing Project</MenuItem>
+										<MenuItem value="Night Out">Night Out</MenuItem>
+										<MenuItem value="Shopping">Shopping</MenuItem>
+										<MenuItem value="Eating Out">Eating Out</MenuItem>
+									</Select>
+								</FormControl>
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<TextField
+									required
+									id="required"
+									label="Name of the Place"
+									value={this.state.name}
+									onChange={(event) => this._handleChange(event, "name")}
+									type="text"
+									name="name"
+									placeholder="Name of the Place" />
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<TextField
+									required
+									id="required"
+									label="Description"
+									value={this.state.description}
+									onChange={(event) => this._handleChange(event, "description")}
+									type="text"
+									name="description"
+									placeholder="Description" />
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<Geosuggest
+									country="gb"
+									onSuggestSelect={this.onSuggestSelect} />
+							</Grid>
+							<Grid item xs={12} md={6}>
+								<Address
+									onChange={(event, field) => this._handleAddress(event, field)}
+									address={this.state.address}
+								/>
+							</Grid>
+
+							<Grid item xs={12} md={6}>
+								<input type="file" accept=".png,.jpg,.jpeg,.gif" onChange={this.onFileChange} />
+								<RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
+									Save </RaisedButton>
+								{this.showError()}
+							</Grid>
+						</Grid>
+						<Dialog
+							fullScreen={fullScreen}
+							open={this.state.open}
+							onRequestClose={this.handleRequestClose}
+						>
+
+							<DialogTitle>{"Thank You"}</DialogTitle>
+							<DialogContent>
+								<DialogContentText>
+									You have Successfully submitted the form
+			  				</DialogContentText>
+							</DialogContent>
+							<DialogActions>
+								<Button onClick={this.handleRequestClose} color="primary">
+									OK
+				</Button>
+							</DialogActions>
+						</Dialog>
+					</div>
+				)
 			}
-		})
-	}
-
-
-	render() {
-		const { classes } = this.props;
-		if (this.state.isLoading) {
-			return <Spinner />
-		} else {
-			return (
-				<div style={styles.root}>
-					<Grid container spacing={24} style={!this.state.error ? styles.paper : styles.paperX} >
-						<Grid item xs={12}>
-							<h2>Suggest a New Place</h2>
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<TextField
-								required
-								id="required"
-								label="Name of the Place"
-								value={this.state.name}
-								onChange={(event) => this._handleChange(event, "name")}
-								type="text"
-								name="name"
-								placeholder="Name of the Place" />
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<TextField
-								required
-								id="required"
-								label="Description"
-								value={this.state.description}
-								onChange={(event) => this._handleChange(event, "description")}
-								type="text"
-								name="description"
-								placeholder="Description" />
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<Geosuggest
-								country="gb"
-								onSuggestSelect={this.onSuggestSelect} />
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<Address
-								onChange={(event, field) => this._handleAddress(event, field)}
-								address={this.state.address}
-							/>
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<FormControl required className={classes.formControl}>
-								<InputLabel htmlFor="Select Category">Select Category</InputLabel>
-								<Select style={styles}
-									value={this.state.selectedCategory}
-									onChange={(event) => this._handleChange(event, "selectedCategory")}>
-									<MenuItem value="Growing Project">Growing Project</MenuItem>
-									<MenuItem value="Night Out">Night Out</MenuItem>
-									<MenuItem value="Shopping">Shopping</MenuItem>
-									<MenuItem value="Eating Out">Eating Out</MenuItem>
-								</Select>
-							</FormControl>
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<input type="file" accept=".png,.jpg,.jpeg,.gif" onChange={this.onFileChange} />
-							<RaisedButton type="submit" value="Submit" onClick={this._handleSubmit}>
-								Save </RaisedButton>
-							{this.showConfirmation()}
-						</Grid>
-					</Grid>
-				</div>
-			)
 		}
 	}
 }

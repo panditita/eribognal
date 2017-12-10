@@ -5,15 +5,12 @@ import Send from 'material-ui-icons/Send';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
 import Spinner from '../../components/Spinner/Spinner'
-//import { stringify } from 'querystring';
 import Dialog, {
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    //   withMobileDialog,
 } from 'material-ui/Dialog';
-
 
 const styles = theme => ({
     button: {
@@ -35,9 +32,7 @@ class Questions extends React.Component {
             answers: [],
             savedAnswers: {},
             isLoading: false,
-            open: false,
-            error: undefined,
-            selectedAnswers: {},
+            selectedAnswers: {}
         };
     }
 
@@ -54,8 +49,20 @@ class Questions extends React.Component {
 
     showQuestions = (response) => {
         this.setState({
-            questions: response.data
+            questions: response.data,
+            isLoading: true
         })
+        apiClient.getQuestions()
+            .then(this.showQuestions);
+    }
+
+    showQuestions = (response) => {
+        setTimeout(() => {
+            this.setState({
+                isLoading: false,
+                questions: response.data
+            })
+        }, 1000)
     }
     onSelect = (question, event) => {
         const value = event.target.value;
@@ -73,9 +80,12 @@ class Questions extends React.Component {
             selectedAnswers
         })
     }
+
     handleSubmit = (event) => {
         event.preventDefault();
-
+        this.setState({
+            isLoading: true
+        })
         const body = { answers: this.state.questions };
         const data = this.state.savedAnswers;
 
@@ -89,100 +99,109 @@ class Questions extends React.Component {
                     error: undefined,
                 })
                 const data = response.data;
-                localStorage.setItem("answers", JSON.stringify(data));
-            })
-            .catch((error) => {
-                this.setState({
-                    open: true,
-                    error,
-                })
-            })
-    }
+                localStorage.setItem("answers", JSON.stringify(data))
+                    .then(() => {
+                        setTimeout(() => {
+                            this.setState({ isLoading: false });
+                            this.props.history.push("/");
+                        }, 1000)
+                    })
+                    .catch((error) => {
+                        this.setState({
+                            open: true,
+                            error,
+                        })
+                    })
+            });
 
-    handleRequestCloseError = () => {
-        this.setState({
-            open: false,
-            isLoading: false,
-        });
-    }
+        handleRequestCloseError = () => {
+            this.setState({
+                open: false,
+                isLoading: false,
+            });
+        }
 
-    handleRequestClose = () => {
-        this.props.history.push("/")
+        handleRequestClose = () => {
+            this.props.history.push("/")
 
-        this.setState({
-            open: false,
-            isLoading: false,
-        });
-    }
+            this.setState({
+                open: false,
+                isLoading: false,
+            });
+        }
 
-    showConfirmation = () => {
-        if (!this.state.open) return null;
-        const { fullScreen } = this.props;
-        if (this.state.error) {
-            return (
-                <Dialog
+        showConfirmation = () => {
+            if (!this.state.open) return null;
+            const { fullScreen } = this.props;
+            if (this.state.error) {
+                return (
+                    <Dialog
+                        open={this.state.open}
+                        onRequestClose={this.handleRequestCloseError}
+                    >
+                        <DialogTitle>{"Error"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                An error has happened, make sure you have answered all the questions!
+					 </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleRequestCloseError} color="primary">
+                                OK
+			 </Button>
+                        </DialogActions>
+                    </Dialog>
+                )
+            } else {
+                return (<Dialog
+                    fullScreen={fullScreen}
                     open={this.state.open}
-                    onRequestClose={this.handleRequestCloseError}
+                    onRequestClose={this.handleRequestClose}
                 >
-                    <DialogTitle>{"Error"}</DialogTitle>
+
+                    <DialogTitle>{"Thank You"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            An error has happened, make sure you have answer all the questions!
-					 </DialogContentText>
+                            You have successfully submitted your answers
+			</DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleRequestCloseError} color="primary">
+                        <Button onClick={this.handleRequestClose} color="primary">
                             OK
-			 </Button>
-                    </DialogActions>
-                </Dialog>
-            )
-        } else {
-            return (<Dialog
-                fullScreen={fullScreen}
-                open={this.state.open}
-                onRequestClose={this.handleRequestClose}
-            >
-
-                <DialogTitle>{"Thank You"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        You have successfully submitted your answers
-			</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleRequestClose} color="primary">
-                        OK
 			</Button>
-                </DialogActions>
-            </Dialog>);
+                    </DialogActions>
+                </Dialog>);
+            }
         }
-    }
 
-    render() {
-        const { classes } = this.props;
-        if (this.state.isLoading) {
-            return <Spinner />
-        } else {
-            return (
-                <div className="questionnaires">
-                    {this.state.questions.map((question, index) => {
-                        return (
-                            <QuestionCard key={index} questionId={index}
-                                question={question}
-                                selectedAnswer={this.state.selectedAnswers[question.questionId]}
-                                onSelect={(event) => this.onSelect(question, event)} />
-                        )
-                    })}
-                    <Button className={classes.button} raised color="primary" type="submit" value="Submit" onClick={this.handleSubmit}>
-                        Send
+        render()
+        {
+            const { classes } = this.props;
+            if (this.state.isLoading) {
+                return <Spinner />
+            } else {
+                return (
+                    <div className="questionnaires">
+                        {this.state.questions.map((question, index) => {
+                            return (
+                                <QuestionCard key={index} questionId={index}
+                                    question={question}
+                                    selectedAnswer={this.state.selectedAnswers[question.questionId]}
+                                    onSelect={(event) => this.onSelect(question, event)} />
+                            )
+                        })}
+                        <Button className={classes.button} raised color="primary" type="submit" value="Submit" onClick={this.handleSubmit}>
+                            Send
                     <Send className={this.props.classes.rightIcon} />
-                    </Button>
-                    {this.showConfirmation()}
-                </div>
-            );
+                        </Button>
+                        {this.showConfirmation()}
+                    </div>
+                );
+            }
         }
     }
 }
+
+
 
 export default withStyles(styles)(Questions);  
