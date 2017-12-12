@@ -1,3 +1,4 @@
+/*global google*/
 import React from 'react';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
@@ -171,6 +172,8 @@ class AddPlaceForm extends React.Component {
 		const { address_components = [] } = gmaps;
 		const postCodeData = address_components[5] || {};
 		const cityData = address_components[1] || {};
+		const location = suggest.location;
+		console.log(location)
 
 		this.setState({
 			address: {
@@ -180,6 +183,7 @@ class AddPlaceForm extends React.Component {
 				city: cityData.long_name || '',
 			}
 		})
+
 	}
 
 	render() {
@@ -236,16 +240,19 @@ class AddPlaceForm extends React.Component {
 							<Geosuggest
 								placeholder="Start typing to search for a Place"
 								country="gb"
-								onSuggestSelect={this.onSuggestSelect} />
+								onSuggestSelect={this.onSuggestSelect}
+								location={new google.maps.LatLng(55.86515, -4.25763)}
+								radius="20" />
 						</Grid>
 						<Grid item xs={12} md={6}>
 							<Address
+								fullWidth
 								onChange={(event, field) => this._handleAddress(event, field)}
 								address={this.state.address}
 							/>
 						</Grid>
 
-						<Grid item xs={12} md={6}>
+						<Grid item xs={12} md={6} fullWidth>
 							<input type="file" accept=".png,.jpg,.jpeg,.gif" onChange={this.onFileChange} />
 						</Grid>
 						<Grid item xs={12} md={6}>
