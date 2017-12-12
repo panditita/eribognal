@@ -173,7 +173,6 @@ class AddPlaceForm extends React.Component {
 		const postCodeData = address_components[5] || {};
 		const cityData = address_components[1] || {};
 		const location = suggest.location;
-		console.log(location)
 
 		this.setState({
 			address: {
