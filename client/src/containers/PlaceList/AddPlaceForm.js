@@ -55,7 +55,8 @@ class AddPlaceForm extends React.Component {
 				line1: '',
 				line2: '',
 				postcode: '',
-				city: ''
+				city: '',
+				location: '',
 			},
 			description: '',
 			selectedCategory: "-1",
@@ -78,7 +79,8 @@ class AddPlaceForm extends React.Component {
 					line1: this.state.address.line1,
 					line2: this.state.address.line2,
 					postcode: this.state.address.postcode,
-					city: this.state.address.city
+					city: this.state.address.city,
+					location: this.state.address.location
 				},
 			description: this.state.description,
 			category: this.state.selectedCategory,
@@ -92,6 +94,7 @@ class AddPlaceForm extends React.Component {
 						line2: "",
 						postcode: "",
 						city: "",
+						location: "",
 					},
 					description: "",
 					selectedCategory: "",
@@ -152,13 +155,13 @@ class AddPlaceForm extends React.Component {
 					<DialogTitle>{"Error"}</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
-							An Error Has Happened, Please Make Sure That You have entered all the details
+							An Error has happened, please make sure that you have entered all the details
 					 </DialogContentText>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={this.handleRequestClosex} color="primary">
 							OK
-			 </Button>
+						</Button>
 					</DialogActions>
 				</Dialog>
 			)
@@ -173,7 +176,6 @@ class AddPlaceForm extends React.Component {
 		const postCodeData = address_components[5] || {};
 		const cityData = address_components[1] || {};
 		const location = suggest.location;
-		console.log(location)
 
 		this.setState({
 			address: {
@@ -181,9 +183,9 @@ class AddPlaceForm extends React.Component {
 				line2: gmaps.formatted_address || '',
 				postcode: postCodeData.long_name || '',
 				city: cityData.long_name || '',
+				location: location || '',
 			}
 		})
-
 	}
 
 	render() {
@@ -251,7 +253,6 @@ class AddPlaceForm extends React.Component {
 								address={this.state.address}
 							/>
 						</Grid>
-
 						<Grid item xs={12} md={6} fullWidth>
 							<input type="file" accept=".png,.jpg,.jpeg,.gif" onChange={this.onFileChange} />
 						</Grid>
@@ -268,7 +269,6 @@ class AddPlaceForm extends React.Component {
 						open={this.state.open}
 						onRequestClose={this.handleRequestClose}
 					>
-
 						<DialogTitle>{"Thank You"}</DialogTitle>
 						<DialogContent>
 							<DialogContentText>
