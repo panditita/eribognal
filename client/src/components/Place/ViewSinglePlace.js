@@ -37,8 +37,6 @@ const styles = ({
     },
 });
 
-
-
 class viewPlace extends React.Component {
     constructor(props) {
         super(props);
@@ -69,7 +67,6 @@ class viewPlace extends React.Component {
                 <p style={styles.listDetails}> {place.address.postcode} </p>
                 <p style={styles.listDetails}> {place.address.city} </p></div>);
     }
-
 
     render() {
         let place = this.state.place;
