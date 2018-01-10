@@ -1,7 +1,6 @@
 import React from 'react';
 import apiClient from '../../helpers/apiClient';
 import Grid from 'material-ui/Grid';
-import CategoryIcon from '../CategoryIcon/CategoryIcon'
 
 
 const styles = ({
@@ -19,18 +18,16 @@ const styles = ({
         margin: 20
     },
     listDetails: {
-        fontSize: 18,
+        fontSize: 15,
         color: "rgba(0,0,0,0.54)",
         marginTop: 10,
     },
     listCategories: {
-        fontSize: 18,
+        fontSize: 17,
         color: "rgba(0,0,0,0.54)",
         marginTop: 10,
         fontWeight: "bold",
-        fontStyle: "italic"
     },
-
     listTitle: {
         fontSize: 20,
         color: "rgba(0,0,0,0.87)",
@@ -85,7 +82,7 @@ class viewPlace extends React.Component {
                     </Grid>
                     <Grid item xs={8} style={{ paddingTop: 0 }}>
                         <div>
-                            <p style={styles.listAddress}>{place.name} </p>
+                            <p style={styles.listTitle}>{place.name} </p>
                             <p style={styles.listDetails}> {place.description} </p>
                             <p style={styles.listCategories}> {place.category} </p>
                             {this._renderAddress(place)}
